@@ -1,6 +1,10 @@
 plugins {
     id 'java'
+    id 'checkstyle'
 }
+
+//sourceCompatibility = 12
+//targetCompatibility = 12
 
 group 'org.example'
 version '1.0-SNAPSHOT'
@@ -12,6 +16,9 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.3'
+    testImplementation group: 'org.testng', name: 'testng', version: '7.4.0'
 }
 
 test {
