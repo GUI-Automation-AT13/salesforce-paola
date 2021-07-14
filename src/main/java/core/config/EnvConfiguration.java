@@ -1,4 +1,4 @@
-package core.utils;
+package core.config;
 
 import java.io.File;
 import java.io.FileInputStream;

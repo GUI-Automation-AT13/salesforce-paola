@@ -2,8 +2,7 @@ package base;
 
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
-
-import static core.utils.EnvConfiguration.envVariables;
+import static core.config.EnvConfiguration.envVariables;
 
 public class Login extends BaseTest {
 

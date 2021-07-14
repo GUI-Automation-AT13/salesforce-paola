@@ -1,14 +1,14 @@
 package base;
 
-import core.utils.DriverEnum;
-import core.utils.DriverManager;
-import core.utils.DriverManagerFactory;
+import core.selenium.DriverManager;
+import core.selenium.DriverManagerFactory;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import salesforce.pages.LoginPage;
-import static core.utils.EnvConfiguration.envVariables;
+import static core.config.EnvConfiguration.envVariables;
 
 public class BaseTest {
 
@@ -20,7 +20,7 @@ public class BaseTest {
 
     @BeforeClass
     public void setUp() {
-        driverManager = DriverManagerFactory.getManager(DriverEnum.CHROME);
+        driverManager = DriverManagerFactory.getManager(DriverManagerType.FIREFOX);
         driver = driverManager.getDriver();
         driver.get(envVariables("LOGIN_URL"));
         wait = new WebDriverWait(driver, WAIT_TIME);
@@ -28,6 +28,6 @@ public class BaseTest {
 
     @AfterClass
     public void tearDown() {
-        driver.quit();
+        driverManager.quitDriver();
     }
 }

@@ -1,4 +1,8 @@
-package core.utils;
+package core.selenium;
+
+import core.selenium.browser.driver.ChromeDriverManager;
+import core.selenium.browser.driver.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 public class DriverManagerFactory {
 
@@ -7,7 +11,7 @@ public class DriverManagerFactory {
      * @param type gets the type for web driver.
      * @return returns the driver type.
      */
-    public static DriverManager getManager(final DriverEnum type) {
+    public static DriverManager getManager(final DriverManagerType type) {
 
         DriverManager driverManager;
 

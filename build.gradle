@@ -3,9 +3,6 @@ plugins {
     id 'checkstyle'
 }
 
-//sourceCompatibility = 12
-//targetCompatibility = 12
-
 group 'org.example'
 version '1.0-SNAPSHOT'
 
@@ -22,5 +19,5 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
+    useTestNG()
 }
