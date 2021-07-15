@@ -60,4 +60,13 @@ public class StringDateConverterTests {
         LocalDate expectedDate = LocalDate.now().minusMonths(2);
         assertEquals(dateConverter.getDate(), expectedDate);
     }
+
+    @Test
+    public void shouldReturnDateYearAndMonthsAgo() throws Exception {
+        String date = "15 months from now";
+        StringDateConverter dateConverter = new StringDateConverter();
+        dateConverter.convertDate(date);
+        LocalDate expectedDate = LocalDate.now().plusMonths(15);
+        assertEquals(dateConverter.getDate(), expectedDate);
+    }
 }

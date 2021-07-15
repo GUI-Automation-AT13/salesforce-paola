@@ -35,19 +35,15 @@ public class StringDateConverter {
      * @param dateString String to convert.
      */
     private void specificDateStringConvert(final String dateString) {
-        date = LocalDate.now();
-        int day = date.getDayOfMonth();
-        int month = date.getMonthValue();
-        int year = date.getYear();
         String[] splited = dateString.split(" ");
         int number = Integer.parseInt(splited[0]);
         if (splited[2].equals("ago")) {
             number = -number;
         }
         switch (splited[1]) {
-            case "days":date = LocalDate.of(year, month, day + number); break;
-            case "months":date = LocalDate.of(year, month + number, day); break;
-            case "years":date = LocalDate.of(year + number, month, day); break;
+            case "days":date = LocalDate.now().plusDays(number); break;
+            case "months":date = LocalDate.now().plusMonths(number); break;
+            case "years":date = LocalDate.now().plusYears(number); break;
             default: break;
         }
     }
@@ -87,6 +83,9 @@ public class StringDateConverter {
      * @return true if String is valid.
      */
     private boolean validString(final String dateString) {
-        return (dateString != null || dateString != "");
+        if (dateString == null || dateString == "")
+            return false;
+        else
+            return true;
     }
 }
