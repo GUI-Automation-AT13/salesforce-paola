@@ -1,12 +1,13 @@
-package core.utils;
+package core;
 
+import core.utils.StringDateConverter;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
 
 import static org.testng.Assert.assertEquals;
 
-public class StringDateConverterTests {
+public class StringDateTests {
 
     @Test
     public void shouldReturnTodayDateWithTodayString() throws Exception {
@@ -69,4 +70,6 @@ public class StringDateConverterTests {
         LocalDate expectedDate = LocalDate.now().plusMonths(15);
         assertEquals(dateConverter.getDate(), expectedDate);
     }
+
+
 }

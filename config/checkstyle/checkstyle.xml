@@ -24,7 +24,7 @@
   <!--
       If you set the basedir property below, then all reported file
       names will be relative to the specified directory. See
-      https://checkstyle.org/core.config.html#Checker
+      https://checkstyle.org/salesforce.config.html#Checker
       <property name="basedir" value="${basedir}"/>
   -->
   <property name="severity" value="error"/>
@@ -39,7 +39,7 @@
 
   <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
   <module name="SuppressionFilter">
-    <property name="file" value="${org.checkstyle.sun.suppressionfilter.core.config}"
+    <property name="file" value="${org.checkstyle.sun.suppressionfilter.salesforce.config}"
               default="checkstyle-suppressions.xml" />
     <property name="optional" value="true"/>
   </module>
@@ -176,7 +176,7 @@
 
     <!-- https://checkstyle.org/config_filters.html#SuppressionXpathFilter -->
     <module name="SuppressionXpathFilter">
-      <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.core.config}"
+      <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.salesforce.config}"
                 default="checkstyle-xpath-suppressions.xml" />
       <property name="optional" value="true"/>
     </module>

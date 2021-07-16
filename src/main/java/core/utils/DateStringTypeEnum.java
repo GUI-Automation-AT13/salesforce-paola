@@ -6,6 +6,5 @@ public enum DateStringTypeEnum {
     YEARS,
     TODAY,
     YESTERDAY,
-    TOMORROW;
-
+    TOMORROW
 }
