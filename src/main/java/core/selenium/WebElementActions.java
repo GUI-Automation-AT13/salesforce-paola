@@ -16,7 +16,7 @@ public class WebElementActions{
     }
 
     public void setInputField(final WebElement webElement, final String text) {
-        wait.until(ExpectedConditions.visibilityOf(webElement));
+        wait.until(ExpectedConditions.elementToBeClickable(webElement));
         webElement.clear();
         webElement.sendKeys(text);
     }

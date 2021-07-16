@@ -1,5 +1,7 @@
 package salesforce.opoortunity;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
 import salesforce.base.BaseTest;
 import salesforce.config.ConfigEnvVar;

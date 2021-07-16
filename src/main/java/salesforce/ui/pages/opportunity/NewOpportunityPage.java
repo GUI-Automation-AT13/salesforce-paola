@@ -13,10 +13,10 @@ public class NewOpportunityPage extends BasePage {
     @FindBy(name = "Amount")
     private WebElement amountInput;
 
-    @FindBy(name = "CloseDate")
+    @FindBy(xpath = "//input[@name='CloseDate']")
     private WebElement closeDate;
 
-    @FindBy(css = "input[name='Name']")
+    @FindBy(xpath = "//input[@name='Name']")
     private WebElement nameOpportunityInput;
 
     @FindBy(name = "NextStep")
