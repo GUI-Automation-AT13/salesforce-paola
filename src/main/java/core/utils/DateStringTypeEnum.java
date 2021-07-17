@@ -1,11 +1,13 @@
 package core.utils;
 
 public enum DateStringTypeEnum {
-    DAYS,
-    MONTHS,
-    YEARS,
+    DAY,
+    MONTH,
+    YEAR,
     TODAY,
     YESTERDAY,
-    TOMORROW;
-
+    TOMORROW,
+    SECONDS,
+    MINUTES,
+    HOURS
 }
