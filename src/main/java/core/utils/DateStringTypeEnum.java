@@ -7,7 +7,7 @@ public enum DateStringTypeEnum {
     TODAY,
     YESTERDAY,
     TOMORROW,
-    SECONDS,
-    MINUTES,
-    HOURS
+    SECOND,
+    MINUTE,
+    HOUR
 }

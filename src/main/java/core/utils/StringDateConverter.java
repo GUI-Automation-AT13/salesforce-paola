@@ -1,54 +1,47 @@
 package core.utils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Locale;
 
 public class StringDateConverter {
 
-    private LocalDate date;
+    private LocalDateTime date;
     private final String simpleDateFormat = "\\d{4}(-|/)(0[1-9]|1[012])(-|/)(0[1-9]|[12][0-9]|[3][01])";
-    private final String singleWordFormat = "[A-Z]+";
+    private final String simpleTimeFormat = "T\\d{2}:\\d{2}:\\d{2}";
+    private final String singleWordFormat = "[ADEORSMWYT]+";
+    private final String enumWordFormat = "[\\d]+\\s((day|days)|(month|months)|(year|years)|(seconds|second)"
+            + "|(minutes|minute)|(hour|hours))\\s(from now|ago)";
 
     /**
      * Sends the String to the method to convert.
      * @param dateString the String date to convert.
+     * Param format allowed:
+     * 1. TODAY | YESTERDAY | TOMORROW.
+     * 2. *number* day(s) | month(s) | year(s) | hour(s) | minute(s) | second(s) from now | ago.
+     * 3. Date only = year -|/ month -|/ day
+     *    Time only = T hour:minute:second
+     *    Date and time = year -|/ month -|/ day T hour:minute:second
+     * @return dateString as LocalDateTime
      */
-    public void convertDate(final String dateString) {
-        validateNullEmpty(dateString);
-        if (validateString(dateString)) {
+    public LocalDateTime convertDate(final String dateString) {
+        if (validateNullEmpty(dateString)) {
             try  {
-                if (dateString.matches(simpleDateFormat)) {
+                if (dateString.matches(simpleDateFormat) || dateString.matches(simpleTimeFormat)
+                        || dateString.matches(simpleDateFormat.concat(simpleTimeFormat))) {
                     dateStringConvert(dateString);
-                } else {
-                    enumConvertDate(dateString);
+                } else if (dateString.matches(singleWordFormat)) {
+                    singleWordDateConvert(dateString);
+                } else if (dateString.matches(enumWordFormat)) {
+                    specificDateStringConvert(dateString);
                 }
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException("Invalid Argument: Unsupported String Format.");
             }
-        }
-    }
-
-    /**
-     * Validates that the String has the correct format.
-     * 1. YYYY-MM-DD
-     * 2. TODAY - YESTERDAY - TOMORROW
-     * 3. 1 day ago | 13 months from now
-     * @param dateString String date to validate
-     * @return true if the format is correct.
-     */
-    public boolean validateString(String dateString) {
-        return true;
-    }
-
-    /**
-     * Sends String to the correspond method for enum case.
-     * @param dateString String date to convert.
-     */
-    public void enumConvertDate(final String dateString) {
-        if (dateString.matches(singleWordFormat)) {
-            singleWordDateConvert(dateString);
+            return date.withNano(0);
         } else {
-            specificDateStringConvert(dateString);
+            throw new IllegalArgumentException("Invalid Argument: Unsupported String Format.");
         }
     }
 
@@ -59,31 +52,41 @@ public class StringDateConverter {
     private void specificDateStringConvert(final String dateString) {
         String[] splited = dateString.split(" ");
         int number = Integer.parseInt(splited[0]);
-
         if (splited[1].endsWith("s")) {
             splited[1] = splited[1].substring(0, splited[1].lastIndexOf("s"));
         }
-
         if (splited[2].equals("ago")) {
             number = -number;
         }
         switch (DateStringTypeEnum.valueOf(splited[1].toUpperCase(Locale.ROOT))) {
-            case DAY: date = LocalDate.now().plusDays(number); break;
-            case MONTH: date = LocalDate.now().plusMonths(number); break;
-            case YEAR: date = LocalDate.now().plusYears(number); break;
+            case DAY: date = LocalDateTime.now().plusDays(number); break;
+            case MONTH: date = LocalDateTime.now().plusMonths(number); break;
+            case YEAR: date = LocalDateTime.now().plusYears(number); break;
+            case HOUR: date = LocalDateTime.now().plusHours(number); break;
+            case MINUTE: date = LocalDateTime.now().plusMinutes(number); break;
+            case SECOND: date = LocalDateTime.now().plusSeconds(number); break;
             default: break;
         }
     }
 
     /**
-     * Converts a String in Date format YYYY-MM-DD.
+     * Converts a String in Date format.
+     * Accepts only date with "/" or with "-".
+     * Accepts only Time starting with T.
      * @param dateString String to convert.
      */
-    private void dateStringConvert(String dateString) {
-        if (dateString.contains("/")) {
-            dateString = dateString.replace("/", "-");
+    private void dateStringConvert(final String dateString) {
+        String stringDateImproved = dateString;
+        if (stringDateImproved.contains("/")) {
+            stringDateImproved = stringDateImproved.replace("/", "-");
         }
-        date = LocalDate.parse(dateString);
+        if (!stringDateImproved.contains("T") || !stringDateImproved.contains(":")) {
+            date = LocalDate.parse(stringDateImproved).atTime(LocalTime.now());
+        } else if (!stringDateImproved.contains("-")) {
+            date = LocalTime.parse(stringDateImproved).atDate(LocalDate.now());
+        } else {
+            date = LocalDateTime.parse(stringDateImproved);
+        }
     }
 
     /**
@@ -92,19 +95,11 @@ public class StringDateConverter {
      */
     private void singleWordDateConvert(final String dateString) {
         switch (DateStringTypeEnum.valueOf(dateString)) {
-            case TODAY: date = LocalDate.now(); break;
-            case TOMORROW: date = LocalDate.now().plusDays(1); break;
-            case YESTERDAY: date = LocalDate.now().minusDays(1); break;
+            case TODAY: date = LocalDateTime.now(); break;
+            case TOMORROW: date = LocalDateTime.now().plusDays(1); break;
+            case YESTERDAY: date = LocalDateTime.now().minusDays(1); break;
             default: break;
         }
-    }
-
-    /**
-     * Gets the date.
-     * @return the LocalDate date.
-     */
-    public LocalDate getDate() {
-        return date;
     }
 
     /**
@@ -113,8 +108,9 @@ public class StringDateConverter {
      * @return true if String is valid.
      */
     private boolean validateNullEmpty(final String dateString) {
-        if (dateString == null || dateString == "")
+        if (dateString == null || dateString == "") {
             return false;
+        }
         return true;
     }
 }

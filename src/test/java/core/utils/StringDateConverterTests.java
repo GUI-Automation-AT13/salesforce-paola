@@ -3,6 +3,8 @@ package core.utils;
 import org.testng.annotations.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.testng.Assert.assertEquals;
 
@@ -12,79 +14,109 @@ public class StringDateConverterTests {
     public void shouldReturnTodayDateWithTodayString() {
         String dateString = "TODAY";
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(dateString);
-        assertEquals(dateConverter.getDate(), LocalDate.now());
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        assertEquals(actualDate, LocalDateTime.now().withNano(0));
     }
 
     @Test
     public void shouldReturnTomorrowDateWithTomorrowString() {
-        String tomorrow = "TOMORROW";
+        String dateString = "TOMORROW";
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(tomorrow);
-        LocalDate expectedDate = LocalDate.now().plusDays(1);
-        assertEquals(dateConverter.getDate(), expectedDate);
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().plusDays(1).withNano(0);
+        assertEquals(actualDate, expectedDate);
     }
 
     @Test
     public void shouldReturnYesterdayDateWithYesterdayString() {
-        String yesterday = "YESTERDAY";
+        String dateString = "YESTERDAY";
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(yesterday);
-        LocalDate expectedDate = LocalDate.now().minusDays(1);
-        assertEquals(dateConverter.getDate(), expectedDate);
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().minusDays(1).withNano(0);
+        assertEquals(actualDate, expectedDate);
     }
 
     @Test
     public void shouldReturnStringDateAsDateWithSlash() {
-        String date = "2021/05/13";
+        String dateString = "2021/05/13";
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(date);
-        LocalDate expectedDate = LocalDate.parse("2021-05-13");
-        assertEquals(dateConverter.getDate(), expectedDate);
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDate.parse("2021-05-13").atTime(LocalTime.now()).withNano(0);
+        assertEquals(actualDate, expectedDate);
     }
 
     @Test
     public void shouldReturnStringDateAsDate() {
-        String date = "2021-05-13";
+        String dateString = "2021-05-13";
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(date);
-        LocalDate expectedDate = LocalDate.parse(date);
-        assertEquals(dateConverter.getDate(), expectedDate);
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDate.parse(dateString).atTime(LocalTime.now()).withNano(0);
+        assertEquals(actualDate, expectedDate);
     }
 
     @Test
     public void shouldReturnDateWithSpecificConditionsInString() {
-        String date = "2 days ago";
+        String dateString = "2 days ago";
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(date);
-        LocalDate expectedDate = LocalDate.now().minusDays(2);
-        assertEquals(dateConverter.getDate(), expectedDate);
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().minusDays(2).withNano(0);
+        assertEquals(actualDate, expectedDate);
     }
 
     @Test
     public void shouldReturnDateTwoMonthsAgo() {
-        String date = "2 months ago";
+        String dateString = "2 months ago";
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(date);
-        LocalDate expectedDate = LocalDate.now().minusMonths(2);
-        assertEquals(dateConverter.getDate(), expectedDate);
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().minusMonths(2).withNano(0);
+        assertEquals(actualDate, expectedDate);
     }
 
     @Test
     public void shouldReturnDateYearAndMonthsAgo() {
-        String date = "15 months from now";
+        String dateString = "15 months from now";
+        int addMonthExpected = 15;
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(date);
-        LocalDate expectedDate = LocalDate.now().plusMonths(15);
-        assertEquals(dateConverter.getDate(), expectedDate);
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().plusMonths(addMonthExpected).withNano(0);
+        assertEquals(actualDate, expectedDate);
     }
 
     @Test
     public void shouldReturnDateYearAndOneMonthAgo() {
-        String date = "1 month from now";
+        String dateString = "1 month from now";
         StringDateConverter dateConverter = new StringDateConverter();
-        dateConverter.convertDate(date);
-        LocalDate expectedDate = LocalDate.now().plusMonths(1);
-        assertEquals(dateConverter.getDate(), expectedDate);
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().plusMonths(1).withNano(0);
+        assertEquals(actualDate, expectedDate);
+    }
+
+    @Test
+    public void shouldReturnDateOneHourAgo() {
+        String dateString = "1 hour ago";
+        StringDateConverter dateConverter = new StringDateConverter();
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().plusHours(-1).withNano(0);
+        assertEquals(actualDate, expectedDate);
+    }
+
+    @Test
+    public void shouldReturnDateTwentyMinutesFromNow() {
+        String dateString = "20 minutes from now";
+        int addMonthExpected = 20;
+        StringDateConverter dateConverter = new StringDateConverter();
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().plusMinutes(addMonthExpected).withNano(0);
+        assertEquals(actualDate, expectedDate);
+    }
+
+    @Test
+    public void shouldReturnDateTenSecondsFromNow() {
+        String dateString = "10 seconds from now";
+        int addMonthExpected = 10;
+        StringDateConverter dateConverter = new StringDateConverter();
+        LocalDateTime actualDate = dateConverter.convertDate(dateString);
+        LocalDateTime expectedDate = LocalDateTime.now().plusSeconds(addMonthExpected).withNano(0);
+        assertEquals(actualDate, expectedDate);
     }
 }
