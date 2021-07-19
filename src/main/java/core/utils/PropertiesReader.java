@@ -12,7 +12,7 @@ public class PropertiesReader {
 
     /**
      * Gets the values inside a properties file.
-     *
+     * @param filePath url path of property file.
      * @return the read properties.
      */
     public static Properties readProperties(final String filePath) {

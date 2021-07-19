@@ -1,7 +1,5 @@
 package salesforce.opoortunity;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
 import salesforce.base.BaseTest;
 import salesforce.config.ConfigEnvVar;
@@ -13,13 +11,13 @@ import salesforce.ui.pages.opportunity.OpportunityPage;
 
 public class OpportunityTests extends BaseTest {
 
-    private PageTransporter pageTransporter = new PageTransporter();
     private OpportunityPage opportunityPage;
-    private HomePage homePage;
     private NewOpportunityPage formOpportunity;
+    private HomePage homePage;
+    private PageTransporter pageTransporter = new PageTransporter();
 
     @Test
-    public void testCreateCaseWithRequiredValues() {
+    public void testCreateOpportunityWithRequiredValuesOnly() {
         String username = ConfigEnvVar.getInstance().getUserName();
         String password = ConfigEnvVar.getInstance().getPassword();
         loginPage = new LoginPage();
@@ -27,8 +25,27 @@ public class OpportunityTests extends BaseTest {
         opportunityPage = pageTransporter.goToOpportunityPage();
         formOpportunity = opportunityPage.openNewOpportunityForm();
         formOpportunity.setOpportunityName("New opportunity name");
-        formOpportunity.setStage();
         formOpportunity.setCloseDate("7/31/2021");
+    }
+
+    @Test
+    public void createOpportunityWithAllValues() {
+        String username = ConfigEnvVar.getInstance().getUserName();
+        String password = ConfigEnvVar.getInstance().getPassword();
+        loginPage = new LoginPage();
+        homePage = loginPage.successfulLogin(username, password);
+        opportunityPage = pageTransporter.goToOpportunityPage();
+        formOpportunity = opportunityPage.openNewOpportunityForm();
+        formOpportunity.setOpportunityName("New opportunity name");
+        formOpportunity.setCloseDate("7/31/2021");
+        formOpportunity.setAmount("14,243.45");
+        formOpportunity.setNextStep("Talking with client");
+        formOpportunity.setOrderNumber("Order#12");
+        formOpportunity.setCurrentGenerator("Number#34-TB");
+        formOpportunity.setTrackingNumber("track#45-TSD");
+        formOpportunity.setMainCompetitor("Sony company");
+        formOpportunity.setDescription("Creating a new Opportunity with all values");
+        formOpportunity.setProbability("20");
     }
 }
 

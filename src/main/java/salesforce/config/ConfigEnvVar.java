@@ -4,7 +4,7 @@ import core.utils.PropertiesReader;
 
 import java.util.Properties;
 
-public class ConfigEnvVar {
+public final class ConfigEnvVar {
 
     private static ConfigEnvVar envConfig;
     private static final String CONFIG_PATH = "credential.properties";
@@ -13,6 +13,11 @@ public class ConfigEnvVar {
     private String opportunityUrl;
     private String userName;
     private String password;
+    private String waitTime;
+
+    public String getWaitTime() {
+        return waitTime;
+    }
 
     public String getBrowser() {
         return browser;
@@ -25,7 +30,7 @@ public class ConfigEnvVar {
     }
 
     public static ConfigEnvVar getInstance() {
-        if(envConfig == null) {
+        if (envConfig == null) {
             envConfig = new ConfigEnvVar();
         }
         return envConfig;
@@ -39,6 +44,7 @@ public class ConfigEnvVar {
         userName = properties.getProperty("USER");
         password = properties.getProperty("PASS");
         browser = properties.getProperty("BROWSER");
+        waitTime = properties.getProperty("WAIT_TIME");
     }
 
     public String getLoginUrl() {

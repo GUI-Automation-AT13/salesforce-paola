@@ -2,7 +2,6 @@ package salesforce.ui.pages;
 
 import core.selenium.DriverManager;
 import core.selenium.WebElementActions;
-import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,7 +11,6 @@ public abstract class BasePage {
     protected WebDriverWait wait;
     protected WebElementActions webElementAction;
     protected DriverManager driverManager;
-    private static final int WAIT_TIME = 30;
 
     /**
      * Sets the basic properties for driver.

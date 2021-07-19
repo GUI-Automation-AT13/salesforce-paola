@@ -1,23 +1,19 @@
 package core.selenium;
 
+import core.selenium.drivers.ChromeDriverOption;
+import core.selenium.drivers.FirefoxDriverOption;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import salesforce.config.ConfigEnvVar;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class DriverManager {
+public final class DriverManager {
 
     static DriverManager driverManager;
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private DriverConfig driverConfig;
+    protected WebDriver driver;
+    protected WebDriverWait wait;
+    protected DriverConfig driverConfig;
 
     private DriverManager() {
         driverConfig = DriverConfig.getInstance();
@@ -52,14 +48,9 @@ public class DriverManager {
         WebDriverManager.getInstance(driverManagerType).setup();
         switch (driverConfig.getBrowser()) {
             case "Firefox":
-                driver = new FirefoxDriver(); break;
+                driver = new FirefoxDriverOption().setFirefoxDriver(); break;
             default: {
-                ChromeOptions options = new ChromeOptions();
-                Map<String, Object> prefs = new HashMap<>();
-                prefs.put("profile.default_content_setting_values.notifications", 2);
-                options.setExperimentalOption("prefs", prefs);
-                WebDriverManager.chromedriver().setup();
-                driver =  new ChromeDriver(options);
+                driver = new ChromeDriverOption().setChromeDriver();
             }
         }
     }

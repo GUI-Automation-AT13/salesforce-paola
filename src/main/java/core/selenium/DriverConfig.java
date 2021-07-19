@@ -2,7 +2,7 @@ package core.selenium;
 
 import salesforce.config.ConfigEnvVar;
 
-public class DriverConfig {
+public final class DriverConfig {
     static DriverConfig driverConfig;
     private String browser;
     private int implicitWaitTime;
@@ -26,8 +26,8 @@ public class DriverConfig {
 
     private void initialize() {
         browser = ConfigEnvVar.getInstance().getBrowser();
-        implicitWaitTime = 20;
-        explicitWaitTime = 20;
+        implicitWaitTime = Integer.parseInt(ConfigEnvVar.getInstance().getWaitTime());
+        explicitWaitTime = Integer.parseInt(ConfigEnvVar.getInstance().getWaitTime());
     }
 
     public String getBrowser() {
