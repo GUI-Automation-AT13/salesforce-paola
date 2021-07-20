@@ -31,7 +31,7 @@ public class WebElementActions {
      * @param webElement btn element.
      */
     public void clickBtn(final WebElement webElement) {
-        wait.until(ExpectedConditions.elementToBeClickable(webElement));
+        wait.until(ExpectedConditions.visibilityOf(webElement));
         webElement.click();
     }
 
@@ -45,16 +45,8 @@ public class WebElementActions {
         }
     }
 
-    /**
-     * Selects the option in a dropdown input.
-     * @param webElement dropdown element.
-     * @param optionElement option selected from the dropdown.
-     */
-    public void clickDropdown(final WebElement webElement, final WebElement optionElement) {
-        webElement.click();
-        wait.until(ExpectedConditions.elementToBeClickable(webElement));
-        webElement.click();
-        wait.until(ExpectedConditions.elementToBeClickable(optionElement));
-        optionElement.click();
+    public String getElementText(final WebElement webElement) {
+        wait.until(ExpectedConditions.visibilityOf(webElement));
+        return webElement.getText();
     }
 }

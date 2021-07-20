@@ -7,7 +7,7 @@ import salesforce.ui.pages.BasePage;
 
 public class NewOpportunityPage extends BasePage {
 
-    @FindBy(css = "//input[@name='IsPrivate']")
+    @FindBy(xpath = "//input[@name='IsPrivate']")
     private WebElement privateCheckBox;
 
     @FindBy(xpath = "//input[@name='Amount']")
@@ -29,7 +29,7 @@ public class NewOpportunityPage extends BasePage {
     private WebElement stageInput;
 
     @FindBy(xpath = "//lightning-base-combobox-item[@data-value='Prospecting']")
-    private WebElement optionStageDropdown;
+    private WebElement optionStageInput;
 
     @FindBy(xpath = "//input[@name='Probability']")
     private WebElement probabilityInput;
@@ -55,7 +55,7 @@ public class NewOpportunityPage extends BasePage {
     @FindBy(xpath = "//textarea[@class='slds-textarea']")
     private WebElement textAreaInput;
 
-    @FindBy(css = "button[title='Save']")
+    @FindBy(xpath = "//button[@name='SaveEdit']")
     private WebElement saveBtn;
 
     @FindBy(name = "SaveAndNew")
@@ -63,6 +63,11 @@ public class NewOpportunityPage extends BasePage {
 
     @FindBy(name = "CancelEdit")
     private WebElement cancelBtn;
+
+    public void setStage() {
+        webElementAction.clickBtn(stageInput);
+        webElementAction.clickBtn(optionStageInput);
+    }
 
     /**
      * Override the method for waiting an element.
