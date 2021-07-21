@@ -30,7 +30,7 @@ public class CreatedOpportunity extends BasePage {
     private WebElement deleteBtnConfirm;
 
     private static final String CREATED_HEADER = "//div[./p[text()='%s']]//lightning-formatted-text";
-    private static final String CREATED_DETAIL = "//div[./div[./span[text()='%s']]]//lightning-formatted-text";
+    private static final String CREATED_DETAIL = "//div[./div[./span[contains(text(),'%s')]]]//lightning-formatted-text";
 
     /**
      * Waits for an specific element to load on the page.
