@@ -12,42 +12,97 @@ public class CreatedOpportunity extends BasePage {
     private WebElement textCreatedSuccessfull;
 
     @FindBy(xpath = "//h1//slot//lightning-formatted-text")
-    private WebElement createdOpportunityName;
+    private WebElement createdOpportunityTitle;
 
-    @FindBy(xpath = "//p[@title='Close Date']//..//lightning-formatted-text")
-    private WebElement createdOpportunityCloseDate;
-
-    @FindBy(xpath = "//a[./span[@class='current slds-path__stage']]/span[@class='title slds-path__title']")
+    @FindBy(css = ".current + span")
     private WebElement createdOpportunityStage;
 
     @FindBy(xpath = "//a[@data-tab-value='detailTab']")
     private WebElement detailBtn;
 
-    private static final String DETAIL_ELEMENT = "//div/span[text()='%s']//..//..//lightning-formatted-text";
+    @FindBy(xpath = "//li[contains(@class,'slds-dropdown-trigger_click')]")
+    private WebElement menuBtn;
 
+    @FindBy(xpath = "//div[@role='menu']//*[@title='Delete']//a")
+    private WebElement deleteOption;
+
+    @FindBy(xpath = "//button[@title='Delete']")
+    private WebElement deleteBtnConfirm;
+
+    private static final String CREATED_HEADER = "//div[./p[text()='%s']]//lightning-formatted-text";
+    private static final String CREATED_DETAIL = "//div[./div[./span[text()='%s']]]//lightning-formatted-text";
+
+    /**
+     * Waits for an specific element to load on the page.
+     */
     @Override
     protected void waitForPageLoaded() {
         wait.until(ExpectedConditions.visibilityOf(detailBtn));
     }
 
-    public String getDetailElementText(final String field) {
-        webElementAction.clickBtn(detailBtn);
-        return driver.findElement(By.xpath(String.format(DETAIL_ELEMENT, field))).getText();
-    }
-
-    public String getSuccesfullCreateAlert() {
+    /**
+     * Gets the alert text when an opportunity is created correctly.
+     * @return the text of the alert when opportunity is created.
+     */
+    public String getSuccessfulAlert() {
         return webElementAction.getElementText(textCreatedSuccessfull);
     }
 
-    public String getOpportunityNameTitle() {
-        return webElementAction.getElementText(createdOpportunityName);
+    /**
+     * Gets the Title of the created opportunity page.
+     * @return the current text of the title header.
+     */
+    public String getTitleHeader() {
+        return webElementAction.getElementText(createdOpportunityTitle);
     }
 
-    public String getCloseDate() {
-        return webElementAction.getElementText(createdOpportunityCloseDate);
+    /**
+     * Gets the generic text from the header in a created opportunity page.
+     * @param field name of the field to get the String.
+     * @return the current text of the specific field.
+     */
+    public String getHeaderString(final String field) {
+        return driver.findElement(By.xpath(String.format(CREATED_HEADER, field))).getText();
     }
 
-    public String getActiveStage() {
+    /**
+     * Gets the Stage form the created Opportunity page.
+     * @return A string with the current text of the Stage.
+     */
+    public String getCurrentStage() {
         return webElementAction.getElementText(createdOpportunityStage);
+    }
+
+    /**
+     * Clicks the detail button for created Oppoprtunity.
+     */
+    public void clickDetails() {
+        webElementAction.clickBtn(driver.findElement(By.xpath("//a[@data-tab-value='detailTab']")));
+        //NEEDED TO WAIT FOR JAVASCRIPT TO LOAD
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ie) {
+
+        }
+    }
+
+    /**
+     * Gets the text for a generic element.
+     * @param field the name of the web element.
+     * @return the text of the specific element.
+     */
+    public String getDetailTextElement(final String field) {
+        return webElementAction.getElementText(driver.findElement(By.xpath(String.format(CREATED_DETAIL, field))));
+    }
+
+    /**
+     * Deletes the created Opportunity in the Opportunity created page.
+     * @return the opportunity page
+     */
+    public OpportunityPage deleteCreatedOpportunity() {
+        webElementAction.clickBtn(menuBtn);
+        webElementAction.clickBtn(deleteOption);
+        webElementAction.clickBtn(deleteBtnConfirm);
+        return new OpportunityPage();
     }
 }

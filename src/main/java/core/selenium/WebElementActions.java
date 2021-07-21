@@ -39,12 +39,17 @@ public class WebElementActions {
      * Clicks the checkbox elements.
      * @param webElement checkbox.
      */
-    public void clickCheckBox(final WebElement webElement) {
-        if (!webElement.isSelected()) {
+    public void clickCheckBox(final WebElement webElement, final boolean isPrivate) {
+        if (!webElement.isSelected() && isPrivate) {
             webElement.click();
         }
     }
 
+    /**
+     * Gets the text of a Web element.
+     * @param webElement the specific element.
+     * @return the string with the text.
+     */
     public String getElementText(final WebElement webElement) {
         wait.until(ExpectedConditions.visibilityOf(webElement));
         return webElement.getText();

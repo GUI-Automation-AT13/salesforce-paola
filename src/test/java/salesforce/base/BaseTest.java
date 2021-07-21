@@ -1,10 +1,11 @@
 package salesforce.base;
 
 import core.selenium.DriverManager;
-import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
 import salesforce.config.ConfigEnvVar;
 import salesforce.ui.PageTransporter;
 import salesforce.ui.pages.HomePage;
@@ -41,6 +42,7 @@ public class BaseTest {
 
     @AfterClass
     public void tearDown() {
+        driverManager.getDriver().quit();
         driver.quit();
     }
 }
