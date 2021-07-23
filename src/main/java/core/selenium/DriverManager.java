@@ -1,30 +1,62 @@
 package core.selenium;
 
+import core.selenium.drivers.ChromeDriverOption;
+import core.selenium.drivers.FirefoxDriverOption;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import salesforce.config.ConfigEnvVar;
 
-public abstract class DriverManager {
+public final class DriverManager {
 
+    static DriverManager driverManager;
     protected WebDriver driver;
-    protected abstract void setDriver();
+    protected WebDriverWait wait;
+    protected DriverConfig driverConfig;
 
-    /**
-     * Sets the type of web driver to use.
-     * @return the web driver configure.
-     */
-    public WebDriver getDriver() {
-        if (driver == null) {
-            setDriver();
-        }
-        return driver;
+    private DriverManager() {
+        driverConfig = DriverConfig.getInstance();
+        setDriverManagerType();
+        wait = new WebDriverWait(driver, driverConfig.getExplicitWaitTime());
+        driver.manage().window().maximize();
     }
 
     /**
-     * Removes the value set for driver.
+     * Controls initializing of driverManager.
+     *
+     * @return a DriverManager entity.
      */
-    public void quitDriver() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
+    public static DriverManager getInstance() {
+        if (driverManager == null) {
+            driverManager = new DriverManager();
         }
+        return driverManager;
+    }
+
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    public WebDriverWait getWait() {
+        return wait;
+    }
+
+    private void setDriverManagerType() {
+        String browser = ConfigEnvVar.getInstance().getBrowser();
+        DriverManagerType driverManagerType = DriverManagerType.valueOf(browser);
+        WebDriverManager.getInstance(driverManagerType).setup();
+        switch (driverConfig.getBrowser()) {
+            case "Firefox":
+                driver = new FirefoxDriverOption().setFirefoxDriver(); break;
+            default: {
+                driver = new ChromeDriverOption().setChromeDriver();
+            }
+        }
+    }
+
+    private void quitDriver() {
+        driver.quit();
+        driverManager = null;
     }
 }

@@ -1,6 +1,5 @@
-package salesforce.pages;
+package salesforce.ui.pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -9,19 +8,11 @@ public class LoginPage extends BasePage {
     @FindBy(name = "username")
     private WebElement usernameTxtBox;
 
-    @FindBy(name = "password")
+    @FindBy(name = "pw")
     private WebElement passwordTxtBox;
 
     @FindBy(name = "Login")
     private WebElement loginBtn;
-
-    /**
-     * Sets the driver for parent class.
-     * @param driver
-     */
-    public LoginPage(final WebDriver driver) {
-        super(driver);
-    }
 
     /**
      * Waits for the page to load completely.
@@ -37,7 +28,7 @@ public class LoginPage extends BasePage {
      * @param userName for login.
      */
     private void setUserName(final String userName) {
-        usernameTxtBox.sendKeys(userName);
+        webElementAction.setInputField(usernameTxtBox, userName);
     }
 
     /**
@@ -45,14 +36,14 @@ public class LoginPage extends BasePage {
      * @param password for login.
      */
     private void setPassword(final String password) {
-        passwordTxtBox.sendKeys(password);
+        webElementAction.setInputField(passwordTxtBox, password);
     }
 
     /**
      * Sets the property to click login button.
      */
     private void clickLoginBtn() {
-        loginBtn.click();
+        webElementAction.clickBtn(loginBtn);
     }
 
     /**
@@ -65,6 +56,6 @@ public class LoginPage extends BasePage {
         setUserName(userName);
         setPassword(password);
         clickLoginBtn();
-        return new HomePage(driver);
+        return new HomePage();
     }
 }

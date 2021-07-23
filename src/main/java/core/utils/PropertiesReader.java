@@ -1,40 +1,27 @@
-package core.config;
+package core.utils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class EnvConfiguration {
-    public static Properties CONFIG = new Properties();
+public class PropertiesReader {
 
-    static {
-        try {
-            CONFIG = read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    private static Properties CONFIG = new Properties();
     private static final String CONFIG_PATH = "credential.properties";
 
     /**
      * Gets the values inside a properties file.
-     *
+     * @param filePath url path of property file.
      * @return the read properties.
      */
-    public static Properties read() throws IOException {
+    public static Properties readProperties(final String filePath) {
         Properties properties = new Properties();
-        File file = new File(CONFIG_PATH);
-
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        try (InputStream reading = new FileInputStream(file)) {
-            properties.load(reading);
-        } catch (Exception e) {
-            e.printStackTrace();
+        try {
+            InputStream input = new FileInputStream(filePath);
+            properties.load(input);
+        } catch (IOException | NullPointerException e) {
+            throw new RuntimeException("Can't read properties file.", e);
         }
         return properties;
     }
@@ -45,7 +32,8 @@ public class EnvConfiguration {
      * @param variables is the value to be obtained from the environment variables
      * @return the environment value
      */
-    public static String envVariables(final String variables) {
+    public static String getEnv(final String variables) {
+        CONFIG = readProperties(CONFIG_PATH);
         if (CONFIG.getProperty(variables) != null) {
             return CONFIG.getProperty(variables);
         }
