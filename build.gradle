@@ -28,6 +28,9 @@ dependencies {
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
     implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.3'
     testImplementation group: 'org.testng', name: 'testng', version: '7.4.0'
+    testCompile 'io.cucumber:cucumber-java:6.10.4'
+    testCompile 'io.cucumber:cucumber-picocontainer:6.10.4'
+    testCompile 'io.cucumber:cucumber-testng:6.10.4'
 }
 
 test {
