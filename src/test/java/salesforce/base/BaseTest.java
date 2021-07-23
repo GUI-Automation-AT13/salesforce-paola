@@ -32,7 +32,7 @@ public class BaseTest {
     }
 
     @BeforeMethod
-    public void goToOpportunityPage() {
+    public final void goToOpportunityPage() {
         String username = ConfigEnvVar.getInstance().getUserName();
         String password = ConfigEnvVar.getInstance().getPassword();
         loginPage = new LoginPage();

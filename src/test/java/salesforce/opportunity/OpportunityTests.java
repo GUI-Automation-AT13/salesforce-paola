@@ -1,7 +1,5 @@
 package salesforce.opportunity;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -97,14 +95,13 @@ public class OpportunityTests extends BaseTest {
         softAssert.assertEquals(createdForm.getDetailTextElement("Next Step"), nextStep);
         softAssert.assertEquals(createdForm.getDetailTextElement("Lead Source"), leadSource);
         softAssert.assertEquals(createdForm.getDetailTextElement("Type"), typeOption);
-        //softAssert.assertEquals(createdForm.getDetailTextElement("Account Name"), searchAccount);
         softAssert.assertEquals(createdForm.getDetailTextElement("Close Date"), opportunityCloseDate);
         softAssert.assertEquals(createdForm.getDetailTextElement("Stage"), opportunityStage);
         softAssert.assertAll();
     }
 
     @AfterMethod
-    public void deleteCreatedOpportunity() {
+    public final void deleteCreatedOpportunity() {
         opportunityPageBack = createdForm.deleteCreatedOpportunity();
     }
 }
