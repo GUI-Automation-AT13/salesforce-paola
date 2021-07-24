@@ -31,7 +31,7 @@ public class WebElementActions {
      * @param webElement btn element.
      */
     public void clickBtn(final WebElement webElement) {
-        wait.until(ExpectedConditions.elementToBeClickable(webElement));
+        wait.until(ExpectedConditions.visibilityOf(webElement));
         webElement.click();
     }
 
@@ -39,22 +39,19 @@ public class WebElementActions {
      * Clicks the checkbox elements.
      * @param webElement checkbox.
      */
-    public void clickCheckBox(final WebElement webElement) {
-        if (!webElement.isSelected()) {
+    public void clickCheckBox(final WebElement webElement, final boolean isPrivate) {
+        if (!webElement.isSelected() && isPrivate) {
             webElement.click();
         }
     }
 
     /**
-     * Selects the option in a dropdown input.
-     * @param webElement dropdown element.
-     * @param optionElement option selected from the dropdown.
+     * Gets the text of a Web element.
+     * @param webElement the specific element.
+     * @return the string with the text.
      */
-    public void clickDropdown(final WebElement webElement, final WebElement optionElement) {
-        webElement.click();
-        wait.until(ExpectedConditions.elementToBeClickable(webElement));
-        webElement.click();
-        wait.until(ExpectedConditions.elementToBeClickable(optionElement));
-        optionElement.click();
+    public String getElementText(final WebElement webElement) {
+        wait.until(ExpectedConditions.visibilityOf(webElement));
+        return webElement.getText();
     }
 }

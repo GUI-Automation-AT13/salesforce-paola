@@ -1,5 +1,6 @@
 package salesforce.ui.pages.opportunity;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -7,55 +8,16 @@ import salesforce.ui.pages.BasePage;
 
 public class NewOpportunityPage extends BasePage {
 
-    @FindBy(css = "//input[@name='IsPrivate']")
+    @FindBy(xpath = "//input[@name='IsPrivate']")
     private WebElement privateCheckBox;
-
-    @FindBy(xpath = "//input[@name='Amount']")
-    private WebElement amountInput;
 
     @FindBy(xpath = "//input[@name='CloseDate']")
     private WebElement closeDate;
 
-    @FindBy(xpath = "//input[@name='Name']")
-    private WebElement nameOpportunityInput;
-
-    @FindBy(xpath = "//input[@name='NextStep']")
-    private WebElement nextStepInput;
-
-    @FindBy(css = ".slds-input.slds-combobox__input[placeholder='Search Accounts...']")
-    private WebElement accountSearch;
-
-    @FindBy(xpath = "//label[text()='Stage']/..//input[@class='slds-input slds-combobox__input']")
-    private WebElement stageInput;
-
-    @FindBy(xpath = "//lightning-base-combobox-item[@data-value='Prospecting']")
-    private WebElement optionStageDropdown;
-
-    @FindBy(xpath = "//input[@name='Probability']")
-    private WebElement probabilityInput;
-
-    @FindBy(xpath = "//label[text()='Type']/..//input[@class='slds-input slds-combobox__input']")
-    private WebElement typeInput;
-
-    @FindBy(css = ".slds-input.slds-combobox__input[placeholder='Search Campaigns...']")
-    private WebElement campaignSearch;
-
-    @FindBy(xpath = "//input[@name='OrderNumber__c']")
-    private WebElement orderNumberInput;
-
-    @FindBy(xpath = "//input[@name='MainCompetitors__c']")
-    private WebElement mainCompetitorInput;
-
-    @FindBy(xpath = "//input[@name='CurrentGenerators__c']")
-    private WebElement currentGeneratorsInput;
-
-    @FindBy(xpath = "//input[@name='TrackingNumber__c']")
-    private WebElement trackingNumberInput;
-
     @FindBy(xpath = "//textarea[@class='slds-textarea']")
     private WebElement textAreaInput;
 
-    @FindBy(css = "button[title='Save']")
+    @FindBy(xpath = "//button[@name='SaveEdit']")
     private WebElement saveBtn;
 
     @FindBy(name = "SaveAndNew")
@@ -64,27 +26,63 @@ public class NewOpportunityPage extends BasePage {
     @FindBy(name = "CancelEdit")
     private WebElement cancelBtn;
 
+    private static final String XPATH_INPUT = "//input[@name='%s']";
+    private static final String XPATH_DROPDOWN_ELEMENT = "//label[text()='%s']/..//input";
+    private static final String XPATH_DROPDOWN_OPTION = "//lightning-base-combobox-item[@data-value='%s']";
+    private static final String XPATH_SEARCH = "//input[contains(@placeholder,'%s')]";
+    private static final String XPATH_SEARCH_OPTION = "//span[@title='%s']";
+
     /**
      * Override the method for waiting an element.
      */
     @Override
     protected void waitForPageLoaded() {
-       wait.until(ExpectedConditions.visibilityOf(nameOpportunityInput));
+        wait.until(ExpectedConditions.visibilityOf(saveBtn));
+    }
+
+    /**
+     * Sets the inputs fields  for the Opportunity form.
+     * @param field name of the Input field.
+     * @param value of the input.
+     * @return The new opportunity page to set again the input.
+     */
+    public NewOpportunityPage setInputField(final String field, final String value) {
+        String modifiedField = field.replace(" ", "");
+        WebElement element = driver.findElement(By.xpath(String.format(XPATH_INPUT, modifiedField)));
+        webElementAction.setInputField(element, value);
+        return this;
+    }
+
+    /**
+     * Sets the fields for generic input dropdown when creating a new opportunity.
+     * @param field the field of the dropdown.
+     * @param option the option from the dropdown.
+     * @return The new opportunity page to set again the input.
+     */
+    public NewOpportunityPage setDropdown(final String field, final String option) {
+        webElementAction.clickBtn(driver.findElement(By.xpath(String.format(XPATH_DROPDOWN_ELEMENT, field))));
+        webElementAction.clickBtn(driver.findElement(By.xpath(String.format(XPATH_DROPDOWN_OPTION, option))));
+        return this;
+    }
+
+    /**
+     * Sets the fields for generic search dropdown when creating a new opportunity.
+     * @param field the field of the search dropdown.
+     * @param option the option from the search dropdown.
+     * @return The new opportunity page to set again the input.
+     */
+    public NewOpportunityPage setSearchDown(final String field, final String option) {
+        driver.findElement(By.xpath(String.format(XPATH_SEARCH, field))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format(XPATH_SEARCH_OPTION, option))));
+        driver.findElement(By.xpath(String.format(XPATH_SEARCH_OPTION, option))).click();
+        return this;
     }
 
     /**
      * Selects the Private checkbox for Private.
      */
-    public void selectPrivateCheckbox() {
-        webElementAction.clickCheckBox(privateCheckBox);
-    }
-
-    /**
-     * Sets the amount for the Opportunity form.
-     * @param amount String for the Amount value.
-     */
-    public void setAmount(final String amount) {
-        webElementAction.setInputField(amountInput, amount);
+    public void selectPrivateCheckbox(final boolean isPrivate) {
+        webElementAction.clickCheckBox(privateCheckBox, isPrivate);
     }
 
     /**
@@ -93,62 +91,6 @@ public class NewOpportunityPage extends BasePage {
      */
     public void setCloseDate(final String closeDateString) {
         webElementAction.setInputField(closeDate, closeDateString);
-    }
-
-    /**
-     * Sets the opportunity name.
-     * @param nameOpportunityText value of the opportunity name.
-     */
-    public void setOpportunityName(final String nameOpportunityText) {
-        webElementAction.setInputField(nameOpportunityInput, nameOpportunityText);
-    }
-
-    /**
-     * Sets the next step in the opportunity form.
-     * @param nextStepText value of the next step.
-     */
-    public void setNextStep(final String nextStepText) {
-        webElementAction.setInputField(nextStepInput, nextStepText);
-    }
-
-    /**
-     * Sets te probability for the Opportunity.
-     * @param probabilityText value of the probability.
-     */
-    public void setProbability(final String probabilityText) {
-        webElementAction.setInputField(probabilityInput, probabilityText);
-    }
-
-    /**
-     * Sets the order number in the opportunity form.
-     * @param orderNumberText value of the order number.
-     */
-    public void setOrderNumber(final String orderNumberText) {
-        webElementAction.setInputField(orderNumberInput, orderNumberText);
-    }
-
-    /**
-     * Sets the main competitor in the opportunity form.
-     * @param mainCompetitorText value of the main competitor.
-     */
-    public void setMainCompetitor(final String mainCompetitorText) {
-        webElementAction.setInputField(mainCompetitorInput, mainCompetitorText);
-    }
-
-    /**
-     * Sets the current generator in the opportunity form.
-     * @param currentGeneratorText value of the current generator.
-     */
-    public void setCurrentGenerator(final String currentGeneratorText) {
-        webElementAction.setInputField(currentGeneratorsInput, currentGeneratorText);
-    }
-
-    /**
-     * Sets the tracking number in the opportunity form.
-     * @param trackingNumberText value of the tracking number.
-     */
-    public void setTrackingNumber(final String trackingNumberText) {
-        webElementAction.setInputField(trackingNumberInput, trackingNumberText);
     }
 
     /**
