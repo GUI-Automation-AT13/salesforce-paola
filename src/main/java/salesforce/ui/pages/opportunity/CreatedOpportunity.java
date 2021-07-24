@@ -81,9 +81,7 @@ public class CreatedOpportunity extends BasePage {
         //NEEDED TO WAIT FOR JAVASCRIPT TO LOAD
         try {
             Thread.sleep(3000);
-        } catch (InterruptedException ie) {
-
-        }
+        } catch (InterruptedException ie) {}
     }
 
     /**

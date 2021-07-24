@@ -29,8 +29,6 @@ public class NewOpportunityPage extends BasePage {
     private static final String XPATH_INPUT = "//input[@name='%s']";
     private static final String XPATH_DROPDOWN_ELEMENT = "//label[text()='%s']/..//input";
     private static final String XPATH_DROPDOWN_OPTION = "//lightning-base-combobox-item[@data-value='%s']";
-    //private static final String XPATH_SEARCH = "//input[contains(@placeholder,'%s')]";
-    //private static final String XPATH_SEARCH_OPTION = "//lightning-base-combobox-item[.//span[@title='%s']]/..";
     private static final String XPATH_SEARCH = "//input[contains(@placeholder,'%s')]";
     private static final String XPATH_SEARCH_OPTION = "//span[@title='%s']";
 
