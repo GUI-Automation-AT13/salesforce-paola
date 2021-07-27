@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import salesforce.ui.pages.BasePage;
 
 public class CreatedOpportunity extends BasePage {
+    private final int sleepTime = 3000;
 
     @FindBy(css = ".slds-theme--success span a div")
     private WebElement textCreatedSuccessfull;
@@ -80,7 +81,7 @@ public class CreatedOpportunity extends BasePage {
         webElementAction.clickBtn(driver.findElement(By.xpath("//a[@data-tab-value='detailTab']")));
         //NEEDED TO WAIT FOR JAVASCRIPT TO LOAD
         try {
-            Thread.sleep(3000);
+            Thread.sleep(sleepTime);
         } catch (InterruptedException ie) {
 
         }

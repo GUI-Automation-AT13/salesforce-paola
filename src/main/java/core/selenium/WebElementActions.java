@@ -38,6 +38,7 @@ public class WebElementActions {
     /**
      * Clicks the checkbox elements.
      * @param webElement checkbox.
+     * @param isPrivate set the status from private.
      */
     public void clickCheckBox(final WebElement webElement, final boolean isPrivate) {
         if (!webElement.isSelected() && isPrivate) {

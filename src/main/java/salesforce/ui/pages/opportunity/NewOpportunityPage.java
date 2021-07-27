@@ -82,6 +82,7 @@ public class NewOpportunityPage extends BasePage {
 
     /**
      * Selects the Private checkbox for Private.
+     * @param isPrivate state of private.
      */
     public void selectPrivateCheckbox(final boolean isPrivate) {
         webElementAction.clickCheckBox(privateCheckBox, isPrivate);

@@ -19,7 +19,7 @@ Feature: Create opportunity
       Given I login to Salesforce site with valid credentials
       | username |
       | password |
-      And navigate to Opportunity page selecting new
+      When I navigate to "Opportunity" page
       When I create a new Opportunity with fields
         | opportunityName | new name UNIQUE_ID  |
         | closeDate       | DATE_TODAY          |

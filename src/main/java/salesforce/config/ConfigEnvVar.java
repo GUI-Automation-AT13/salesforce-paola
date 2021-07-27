@@ -14,6 +14,31 @@ public final class ConfigEnvVar {
     private String userName;
     private String password;
     private String waitTime;
+    private String clientId;
+    private String clientSecret;
+    private String version;
+    private String service;
+    private String login;
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
 
     public String getWaitTime() {
         return waitTime;
@@ -45,6 +70,11 @@ public final class ConfigEnvVar {
         password = properties.getProperty("PASS");
         browser = properties.getProperty("BROWSER");
         waitTime = properties.getProperty("WAIT_TIME");
+        clientId = properties.getProperty("CLIENT_ID");
+        clientSecret = properties.getProperty("CLIENT_SECRET");
+        login = properties.getProperty("LOGIN");
+        version = properties.getProperty("VERSION");
+        service = properties.getProperty("SERVICE");
     }
 
     public String getLoginUrl() {
