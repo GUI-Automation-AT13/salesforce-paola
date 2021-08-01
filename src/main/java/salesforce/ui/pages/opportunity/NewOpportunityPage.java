@@ -1,45 +1,38 @@
 package salesforce.ui.pages.opportunity;
 
+import api.salesforce.entities.Opportunity;
+import core.utils.Translate;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import salesforce.config.ConfigEnvVar;
 import salesforce.ui.pages.BasePage;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class NewOpportunityPage extends BasePage {
 
-    @FindBy(xpath = "//input[@name='IsPrivate']")
-    private WebElement privateCheckBox;
-
-    @FindBy(xpath = "//input[@name='CloseDate']")
-    private WebElement closeDate;
-
-    @FindBy(xpath = "//textarea[@class='slds-textarea']")
-    private WebElement textAreaInput;
-
-    @FindBy(xpath = "//button[@name='SaveEdit']")
-    private WebElement saveBtn;
-
-    @FindBy(name = "SaveAndNew")
-    private WebElement saveAndNewBtn;
-
-    @FindBy(name = "CancelEdit")
-    private WebElement cancelBtn;
-
-    private static final String XPATH_INPUT = "//input[@name='%s']";
-    private static final String XPATH_DROPDOWN_ELEMENT = "//label[text()='%s']/..//input";
+    private static final String XPATH_INPUT_NAME = "//input[@name='%s']";
+    private static final String XPATH_CHECKBOX = "//input[@name='%s']";
+    private static final String XPATH_DESCRIPTION = "//label[text()='%s']/..//textarea";
+    private static final String XPATH_DROPDOWN = "//label[text()='%s']/..//input";
     private static final String XPATH_DROPDOWN_OPTION = "//lightning-base-combobox-item[@data-value='%s']";
-    //private static final String XPATH_SEARCH = "//input[contains(@placeholder,'%s')]";
-    //private static final String XPATH_SEARCH_OPTION = "//lightning-base-combobox-item[.//span[@title='%s']]/..";
-    private static final String XPATH_SEARCH = "//input[contains(@placeholder,'%s')]";
     private static final String XPATH_SEARCH_OPTION = "//span[@title='%s']";
+    private WebElement saveBtn = driver.findElement(By.xpath("//button[@name='SaveEdit']"));
+    private WebElement saveAndNewBtn = driver.findElement(By.xpath("//button[@name='SaveAndNew']"));
+    private WebElement cancelBtn = driver.findElement(By.xpath("//button[@name='CancelEdit']"));
+
 
     /**
      * Override the method for waiting an element.
      */
     @Override
     protected void waitForPageLoaded() {
-        wait.until(ExpectedConditions.visibilityOf(saveBtn));
+        String newXpath = "//button[@name='SaveEdit']";
+        By byBtnSave = By.xpath(String.format(newXpath));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(byBtnSave));
     }
 
     /**
@@ -49,9 +42,7 @@ public class NewOpportunityPage extends BasePage {
      * @return The new opportunity page to set again the input.
      */
     public NewOpportunityPage setInputField(final String field, final String value) {
-        String modifiedField = field.replace(" ", "");
-        WebElement element = driver.findElement(By.xpath(String.format(XPATH_INPUT, modifiedField)));
-        webElementAction.setInputField(element, value);
+        webElementAction.setInputField(webElementAction.getElementByXpath(XPATH_INPUT_NAME, field), value);
         return this;
     }
 
@@ -62,8 +53,8 @@ public class NewOpportunityPage extends BasePage {
      * @return The new opportunity page to set again the input.
      */
     public NewOpportunityPage setDropdown(final String field, final String option) {
-        webElementAction.clickBtn(driver.findElement(By.xpath(String.format(XPATH_DROPDOWN_ELEMENT, field))));
-        webElementAction.clickBtn(driver.findElement(By.xpath(String.format(XPATH_DROPDOWN_OPTION, option))));
+        webElementAction.clickBtn(webElementAction.getElementByXpath(XPATH_DROPDOWN, field));
+        webElementAction.clickBtn(webElementAction.getElementByXpath(XPATH_DROPDOWN_OPTION, option));
         return this;
     }
 
@@ -74,34 +65,78 @@ public class NewOpportunityPage extends BasePage {
      * @return The new opportunity page to set again the input.
      */
     public NewOpportunityPage setSearchDown(final String field, final String option) {
-        driver.findElement(By.xpath(String.format(XPATH_SEARCH, field))).click();
+        wait.until(ExpectedConditions.visibilityOf(webElementAction.getElementByXpath(XPATH_DROPDOWN, field)));
+        webElementAction.clickBtn(webElementAction.getElementByXpath(XPATH_DROPDOWN, field));
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(String.format(XPATH_SEARCH_OPTION, option))));
-        driver.findElement(By.xpath(String.format(XPATH_SEARCH_OPTION, option))).click();
+        webElementAction.clickBtn(webElementAction.getElementByXpath(XPATH_SEARCH_OPTION, option));
         return this;
     }
 
     /**
      * Selects the Private checkbox for Private.
+     * @param field field type.
      * @param isPrivate state of private.
+     * @return NewOpportunityPage.
      */
-    public void selectPrivateCheckbox(final boolean isPrivate) {
-        webElementAction.clickCheckBox(privateCheckBox, isPrivate);
-    }
-
-    /**
-     * Sets the date for the CloseDate input.
-     * @param closeDateString String for the date.
-     */
-    public void setCloseDate(final String closeDateString) {
-        webElementAction.setInputField(closeDate, closeDateString);
+    public NewOpportunityPage selectCheckbox(final String field, final boolean isPrivate) {
+        webElementAction.clickCheckBox(webElementAction.getElementByXpath(XPATH_CHECKBOX, field), isPrivate);
+        return this;
     }
 
     /**
      * Sets the description in the opportunity form.
      * @param descriptionText value of the description.
+     * @param field field of web element.
      */
-    public void setDescription(final String descriptionText) {
-        webElementAction.setInputField(textAreaInput, descriptionText);
+    public void setDescription(final String field, final String descriptionText) {
+        webElementAction.setInputField(webElementAction.getElementByXpath(XPATH_DESCRIPTION, field),
+                descriptionText);
+    }
+
+    /**
+     * Sets all the parameters set in the Opportunity entity.
+     * @param fields the key of Map.
+     * @param opportunity entity.
+     */
+    public void setOpportunityFormFields(final Set<String> fields, final Opportunity opportunity) {
+        Map<String, Runnable> mapFields = new HashMap<>();
+        mapFields.put("Private", () -> selectCheckbox("IsPrivate", opportunity.isPrivate()));
+        mapFields.put("Amount", () -> setInputField("Amount", opportunity.getAmount()));
+        mapFields.put("OpportunityName", () -> setInputField("Name", opportunity.getOpportunityName()));
+        mapFields.put("CloseDate", () -> setInputField("CloseDate", opportunity.getCloseDate()));
+        mapFields.put("NextStep", () -> setInputField("NextStep", opportunity.getNextStep()));
+        mapFields.put("Probability", () -> setInputField("Probability", opportunity.getProbability()));
+        mapFields.put("OrderNumber", () -> setInputField("OrderNumber__c", opportunity.getOrderNumber()));
+        mapFields.put("CurrentGenerator", () -> setInputField("CurrentGenerators__c",
+                opportunity.getCurrentGenerator()));
+        mapFields.put("TrackingNumber", () -> setInputField("TrackingNumber__c", opportunity.getTrackingNumber()));
+        mapFields.put("MainCompetitor", () -> setInputField("MainCompetitors__c", opportunity.getMainComp()));
+        mapFields.put("Description", () -> setDescription(Translate.translateField("description"),
+                opportunity.getDescription()));
+        mapFields.put("Stage", () -> setDropdown(Translate.translateField("stage"),
+                opportunity.getOpportunityStage()));
+        mapFields.put("Type", () -> setDropdown(Translate.translateField("type"),
+                opportunity.getTypeOption()));
+        mapFields.put("LeadSource", () -> setDropdown(Translate.translateField("leadSource"),
+                opportunity.getLeadSource()));
+        mapFields.put("Delivery", () -> setDropdown("Delivery/Installation Status", opportunity.getDeliveryOption()));
+        mapFields.put("Account", () -> setSearchDown(Translate.translateField("accountName"),
+                opportunity.getSearchAccount()));
+        mapFields.put("Campaign", () -> setSearchDown(Translate.translateField("campaignName"),
+                opportunity.getSearchCampaign()));
+        fields.forEach(field -> mapFields.get(field).run());
+    }
+
+    /**
+     * Creates a new Opportunity and goes to the details paage.
+     * @param fields the keys of the Map.
+     * @param opportunity entity of Opportunity.
+     * @return created opportunity page.
+     */
+    public CreatedOpportunity createNewOpportunity(final Set<String> fields, final Opportunity opportunity) {
+        setOpportunityFormFields(fields, opportunity);
+        webElementAction.clickBtn(saveBtn);
+        return new CreatedOpportunity();
     }
 
     /**

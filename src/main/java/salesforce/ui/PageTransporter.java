@@ -26,8 +26,7 @@ public class PageTransporter {
         return new OpportunityPage();
     }
 
-    public static void navigateToUrlByPageName(final String page) {
-        //ENUM O MAP
-        goToURL(baseUrl);
+    public static void navigateToSpecificFeature(final String feature) {
+        goToURL(baseUrl.concat(String.format(ConfigEnvVar.getInstance().getFeatureURL(), feature)));
     }
 }

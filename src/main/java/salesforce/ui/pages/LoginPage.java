@@ -1,5 +1,6 @@
 package salesforce.ui.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,8 +12,7 @@ public class LoginPage extends BasePage {
     @FindBy(name = "pw")
     private WebElement passwordTxtBox;
 
-    @FindBy(name = "Login")
-    private WebElement loginBtn;
+    private By loginBtnXPath = By.xpath("//input[@name='Login']");
 
     /**
      * Waits for the page to load completely.
@@ -20,7 +20,7 @@ public class LoginPage extends BasePage {
      */
     @Override
     protected void waitForPageLoaded() {
-        wait.until(ExpectedConditions.visibilityOf(loginBtn));
+        wait.until(ExpectedConditions.visibilityOf(usernameTxtBox));
     }
 
     /**
@@ -43,7 +43,8 @@ public class LoginPage extends BasePage {
      * Sets the property to click login button.
      */
     private void clickLoginBtn() {
-        webElementAction.clickBtn(loginBtn);
+        WebElement webElement = driver.findElement(loginBtnXPath);
+        webElementAction.clickBtn(webElement);
     }
 
     /**

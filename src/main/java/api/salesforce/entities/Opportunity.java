@@ -1,44 +1,50 @@
 package api.salesforce.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDate;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Opportunity {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("OpportunityName")
     private String opportunityName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("NextStep")
     private String nextStep;
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private Long amount;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("Amount")
+    private String amount;
+    @JsonProperty("CloseDate")
     private String closeDate;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("Stage")
     private String opportunityStage;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("Type")
     private String typeOption;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("LeadSource")
     private String leadSource;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("Delivery")
     private String deliveryOption;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("Probability")
     private String probability;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("OrderNumber")
     private String orderNumber;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("CurrentGenerator")
     private String currentGenerator;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("TrackingNumber")
     private String trackingNumber;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("MainCompetitor")
     private String mainComp;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("Description")
     private String description;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("Account")
     private String searchAccount;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("Campaign")
     private String searchCampaign;
+    @JsonProperty("Private")
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    private boolean isPrivate = false;
+    private boolean isPrivate;
+    private Map<String, String> mapFields;
 
     /**
      * Returns the Opportunity name.
@@ -53,7 +59,7 @@ public class Opportunity {
      * @param opportunityNameNew the name to set.
      */
     public void setOpportunityName(final String opportunityNameNew) {
-        this.opportunityName = opportunityNameNew.concat(LocalDate.now().toString());
+        this.opportunityName = opportunityNameNew.concat(LocalDateTime.now().withNano(0).toString());
     }
 
     /**
@@ -76,7 +82,7 @@ public class Opportunity {
      * Returns the Opportunity Amount.
      * @return long of the amount.
      */
-    public Long getAmount() {
+    public String getAmount() {
         return amount;
     }
 
@@ -84,7 +90,7 @@ public class Opportunity {
      * Sets the Opportunity Amount.
      * @param amountNew the amount to set.
      */
-    public void setAmount(final Long amountNew) {
+    public void setAmount(final String amountNew) {
         this.amount = amountNew;
     }
 
@@ -310,5 +316,29 @@ public class Opportunity {
      */
     public void setPrivate(final boolean isPrivateNew) {
         isPrivate = isPrivateNew;
+    }
+
+    /**
+     * Sets a Map for the detail attribute opportunity.
+     */
+    public void setOpportunityDetailField() {
+        mapFields = new HashMap<>();
+        mapFields.put("OpportunityName", getOpportunityName());
+        mapFields.put("Type", getTypeOption());
+        mapFields.put("LeadSource", getLeadSource());
+        mapFields.put("Amount", getAmount());
+        mapFields.put("CloseDate", getCloseDate());
+        mapFields.put("NextStep", getNextStep());
+        mapFields.put("Stage", getOpportunityStage());
+        mapFields.put("Probability", getProbability());
+        mapFields.put("Account", getSearchAccount());
+    }
+
+    /**
+     * Gets the Map with the needed fields.
+     * @return Map of String text.
+     */
+    public Map<String, String> getMapFields() {
+        return mapFields;
     }
 }

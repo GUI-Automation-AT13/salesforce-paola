@@ -1,5 +1,6 @@
 package core.selenium;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -54,5 +55,15 @@ public class WebElementActions {
     public String getElementText(final WebElement webElement) {
         wait.until(ExpectedConditions.visibilityOf(webElement));
         return webElement.getText();
+    }
+
+    /**
+     * Gets an element set by Xpath.
+     * @param field the type of the element.
+     * @param value the value of the element.
+     * @return a webElement .
+     */
+    public WebElement getElementByXpath(final String field, final String value) {
+        return driver.findElement(By.xpath(String.format(field, value)));
     }
 }

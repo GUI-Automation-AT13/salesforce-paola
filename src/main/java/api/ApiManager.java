@@ -12,7 +12,7 @@ public class ApiManager {
      * @return the response.
      */
     private static RequestSpecification buildRequest(final ApiRequest apiRequest) {
-        return given().baseUri(apiRequest.getBaseUri())
+        return given().baseUri(apiRequest.getBaseUri()) //
                 .headers(apiRequest.getHeaders())
                 .queryParams(apiRequest.getQueryParams())
                 .pathParams(apiRequest.getPathParams())
