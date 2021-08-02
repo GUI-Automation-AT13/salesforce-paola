@@ -5,7 +5,6 @@ import core.utils.Translate;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import salesforce.config.ConfigEnvVar;
 import salesforce.ui.pages.BasePage;
 
 import java.util.HashMap;

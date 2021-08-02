@@ -3,7 +3,6 @@ package api.salesforce.entities;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

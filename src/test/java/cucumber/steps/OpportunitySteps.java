@@ -29,6 +29,9 @@ public class OpportunitySteps {
     Set<String> fields;
     protected PageTransporter pageTransporter = new PageTransporter();
 
+    /**
+     * Logins in Salesforce.
+     */
     @Given("I login to Salesforce site as a developer user")
     public void iLoginToSalesforceSiteAsAnUser() {
         String usernameLogin = ConfigEnvVar.getInstance().getUserName();
@@ -36,6 +39,11 @@ public class OpportunitySteps {
         loginPage.successfulLogin(usernameLogin, passwordLogin);
     }
 
+    /**
+     * Creates a new opportunity.
+     * @param dataTable
+     * @throws IOException
+     */
     @When("I create a new Opportunity with fields")
     public void iCreateAFeatureWithFields(final Map<String, String> dataTable) throws IOException {
         opportunity = new ObjectMapper().readValue(new ObjectMapper().writeValueAsString(dataTable), Opportunity.class);
@@ -46,11 +54,17 @@ public class OpportunitySteps {
         createdForm = formOpportunity.createNewOpportunity(fields, opportunity);
     }
 
+    /**
+     *
+     */
     @Then("Successful message appear with Opportunity name")
     public void successfulMessageAppearAndMatches() {
         softAssert.assertEquals(createdForm.getSuccessfulAlert(), "\"" + opportunity.getOpportunityName() + "\"");
     }
 
+    /**
+     *
+     */
     @Then("All Opportunity headers match with previous fields")
     public void headersMatchWithPreviousFields() {
         softAssert.assertEquals(createdForm.getTitleHeader(), opportunity.getOpportunityName());
@@ -60,12 +74,12 @@ public class OpportunitySteps {
         softAssert.assertEquals(createdForm.getHeaderString(
                         Translate.translateField("closeDate"), "lightning-formatted-text"),
                 opportunity.getCloseDate());
-        //softAssert.assertEquals(createdForm.getHeaderString(
-        // Translate.translateField("amount"), "lightning-formatted-text"),
-        // opportunity.getAmount() + " ¤");
         softAssert.assertEquals(createdForm.getCurrentStage(), opportunity.getOpportunityStage());
     }
 
+    /**
+     *
+     */
     @And("Opportunity details match with previous fields")
     public void detailsMatchWithPreviousFields() {
         createdForm.clickDetails();

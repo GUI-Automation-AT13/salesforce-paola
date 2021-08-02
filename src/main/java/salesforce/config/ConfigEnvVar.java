@@ -4,7 +4,6 @@ import core.utils.PropertiesReader;
 
 import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 public final class ConfigEnvVar {
 

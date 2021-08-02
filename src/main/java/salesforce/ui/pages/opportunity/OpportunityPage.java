@@ -1,16 +1,13 @@
 package salesforce.ui.pages.opportunity;
 
-import core.selenium.WebElementActions;
 import core.utils.Translate;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import salesforce.config.ConfigEnvVar;
 import salesforce.ui.pages.BasePage;
 
 public class OpportunityPage extends BasePage {
     private String newXpath;
     private By btnNew;
-    private WebElementActions webElementAction;
 
     /**
      * Override method for waiting an element.
