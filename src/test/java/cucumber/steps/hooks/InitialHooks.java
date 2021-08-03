@@ -1,5 +1,7 @@
 package cucumber.steps.hooks;
 
+import static core.selenium.DriverManager.getInstance;
+
 import core.selenium.DriverManager;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -7,16 +9,16 @@ import org.openqa.selenium.WebDriver;
 import salesforce.config.ConfigEnvVar;
 
 public class InitialHooks {
-    public WebDriver driver;
+    private WebDriver driver;
 
-    @Before
+    @Before(order = 1)
     public void setUp() {
         driver = DriverManager.getInstance().getDriver();
         driver.get(ConfigEnvVar.getInstance().getLoginUrl());
     }
 
-    @After
+    @After(order = 1)
     public void tearDown() {
-        driver.quit();
+        getInstance().quitDriver();
     }
 }

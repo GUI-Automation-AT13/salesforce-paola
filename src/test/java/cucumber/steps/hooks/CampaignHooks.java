@@ -41,12 +41,12 @@ public class CampaignHooks {
         apiRequest = new ApiRequest();
     }
 
-    @Before(value = "@CreateAccount")
-    public void createAccount() throws JsonProcessingException {
+    @Before(value = "@CreateCampaign")
+    public void createCampaign() throws JsonProcessingException {
         campaign = new Campaign();
-        campaign.setName("Opportunity Account");
+        campaign.setName("Opportunity Campaign");
         apiRequest.method(ApiMethod.POST)
-                .endpoint(ApiEndPoints.ACCOUNT)
+                .endpoint(ApiEndPoints.CAMPAIGN)
                 .body(new ObjectMapper().writeValueAsString(campaign));
 
         apiResponse = new ApiResponse();
@@ -54,11 +54,11 @@ public class CampaignHooks {
         campaign.setId(apiResponse.getBody(Response.class).getId());
     }
 
-    @After(value = "@CreateAccount")
-    public void deleteAccount() {
+    @After(value = "@CreateCampaign")
+    public void deleteCampaign() {
         apiRequest.clearPathParam();
         apiRequest.method(ApiMethod.DELETE)
-                .endpoint(ApiEndPoints.ACCOUNT_ID)
+                .endpoint(ApiEndPoints.CAMPAIGN_ID)
                 .addPathParam("CAMPAIGN_ID", campaign.getId());
 
         apiResponse = new ApiResponse();

@@ -1,10 +1,13 @@
 package core.selenium;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.concurrent.TimeUnit;
 
 public class WebElementActions {
 
@@ -65,5 +68,41 @@ public class WebElementActions {
      */
     public WebElement getElementByXpath(final String field, final String value) {
         return driver.findElement(By.xpath(String.format(field, value)));
+    }
+
+    /**
+     * Gets text from detail fields.
+     * @param xpath the path for the field.
+     * @param field name of the field.
+     * @return the text from the detail field.
+     */
+    public String getDetailText(final String xpath, final String field) {
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.MILLISECONDS);
+        try {
+            By xpathElement = By.xpath(String.format(xpath, field));
+            WebElement element = driver.findElement(xpathElement);
+            return element.getText();
+        } catch (NoSuchElementException e) {
+            return null;
+        } finally {
+            driver.manage().timeouts().implicitlyWait(DriverConfig.getInstance().getImplicitWaitTime(),
+                    TimeUnit.MILLISECONDS);
+        }
+    }
+
+    /**
+     * Gets the generic text from the header in a created opportunity page.
+     * @param field name of the field to get the String.
+     * @param headerType type of the element field.
+     * @return the current text of the specific field.
+     */
+    public String getHeaderString(final String xpath, final String field, final String headerType) {
+        try {
+            WebElement createdHeader = driver.findElement(By.xpath(String.format(xpath, field,
+                    headerType)));
+            return createdHeader.getText();
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
 }

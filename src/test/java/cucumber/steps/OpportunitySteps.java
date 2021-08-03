@@ -10,7 +10,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.testng.asserts.SoftAssert;
 import salesforce.config.ConfigEnvVar;
-import salesforce.ui.PageTransporter;
 import salesforce.ui.pages.LoginPage;
 import salesforce.ui.pages.opportunity.CreatedOpportunity;
 import salesforce.ui.pages.opportunity.NewOpportunityPage;
@@ -27,12 +26,11 @@ public class OpportunitySteps {
     CreatedOpportunity createdForm;
     SoftAssert softAssert = new SoftAssert();
     Set<String> fields;
-    protected PageTransporter pageTransporter = new PageTransporter();
 
     /**
      * Logins in Salesforce.
      */
-    @Given("I login to Salesforce site as a developer user")
+    @Given("I login to Salesforce site as a(n) developer user")
     public void iLoginToSalesforceSiteAsAnUser() {
         String usernameLogin = ConfigEnvVar.getInstance().getUserName();
         String passwordLogin = ConfigEnvVar.getInstance().getPassword();
@@ -41,10 +39,10 @@ public class OpportunitySteps {
 
     /**
      * Creates a new opportunity.
-     * @param dataTable
-     * @throws IOException
+     * @param dataTable opportunity fields given from scenario.
+     * @throws IOException exception for error conversion from json to object.
      */
-    @When("I create a new Opportunity with fields")
+    @When("I create a new (.*?) with fields")
     public void iCreateAFeatureWithFields(final Map<String, String> dataTable) throws IOException {
         opportunity = new ObjectMapper().readValue(new ObjectMapper().writeValueAsString(dataTable), Opportunity.class);
         opportunity.setOpportunityDetailField();
@@ -55,9 +53,9 @@ public class OpportunitySteps {
     }
 
     /**
-     *
+     *Validates that the opportunity name in alert matches.
      */
-    @Then("Successful message appear with Opportunity name")
+    @Then("A Successful message appear with (.*?) name")
     public void successfulMessageAppearAndMatches() {
         softAssert.assertEquals(createdForm.getSuccessfulAlert(), "\"" + opportunity.getOpportunityName() + "\"");
     }
@@ -65,30 +63,30 @@ public class OpportunitySteps {
     /**
      *
      */
-    @Then("All Opportunity headers match with previous fields")
+    @Then("All (.*?) headers should match with previous fields")
     public void headersMatchWithPreviousFields() {
-        softAssert.assertEquals(createdForm.getTitleHeader(), opportunity.getOpportunityName());
-        softAssert.assertEquals(createdForm.getHeaderString(
-                        Translate.translateField("accountName"), "span[@class='slds-assistive-text']"),
-                "Open " + opportunity.getSearchAccount() + " Preview");
-        softAssert.assertEquals(createdForm.getHeaderString(
-                        Translate.translateField("closeDate"), "lightning-formatted-text"),
-                opportunity.getCloseDate());
-        softAssert.assertEquals(createdForm.getCurrentStage(), opportunity.getOpportunityStage());
+        for(String field: fields) {
+            if( createdForm.getHeadersFields().containsKey(field)) {
+                softAssert.assertEquals(opportunity.getMapFields().get(field), createdForm.getHeadersFields().get(field));
+            }
+        }
     }
 
     /**
-     *
+     *Validates if all detail fields match with previous data.
      */
-    @And("Opportunity details match with previous fields")
+    @And("(.*?) details should match with previous fields")
     public void detailsMatchWithPreviousFields() {
         createdForm.clickDetails();
-        softAssert.assertTrue(opportunity.getMapFields().equals(createdForm.getDetailMap()));
+        for(String field: fields) {
+            if( createdForm.getDetailMap().containsKey(field)) {
+                softAssert.assertEquals(opportunity.getMapFields().get(field), createdForm.getDetailMap().get(field));
+            }
+        }
     }
 
-    @After(value = "DeleteOpportunity", order = 0)
-    public void deleteOpportunity() {
-        createdForm.deleteCreatedOpportunity();
+    @After(order = 0)
+    public void assertAll() {
         softAssert.assertAll();
     }
 }

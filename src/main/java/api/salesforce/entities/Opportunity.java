@@ -323,6 +323,7 @@ public class Opportunity {
     public void setOpportunityDetailField() {
         mapFields = new HashMap<>();
         mapFields.put("OpportunityName", getOpportunityName());
+        mapFields.put("Account", getSearchAccount());
         mapFields.put("Type", getTypeOption());
         mapFields.put("LeadSource", getLeadSource());
         mapFields.put("Amount", getAmount());
@@ -330,7 +331,6 @@ public class Opportunity {
         mapFields.put("NextStep", getNextStep());
         mapFields.put("Stage", getOpportunityStage());
         mapFields.put("Probability", getProbability());
-        mapFields.put("Account", getSearchAccount());
     }
 
     /**
