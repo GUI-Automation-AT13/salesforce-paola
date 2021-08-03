@@ -9,6 +9,9 @@ import java.time.LocalTime;
 import static org.testng.Assert.assertEquals;
 
 public class StringDateConverterTests {
+    private final int numTest10 = 10;
+    private final int numTest20 = 20;
+    private final int numTest15 = 15;
 
     @Test
     public void shouldReturnTodayDateWithTodayString() {
@@ -75,7 +78,7 @@ public class StringDateConverterTests {
     @Test
     public void shouldReturnDateYearAndMonthsAgo() {
         String dateString = "15 months from now";
-        int addMonthExpected = 15;
+        int addMonthExpected = numTest15;
         StringDateConverter dateConverter = new StringDateConverter();
         LocalDateTime actualDate = dateConverter.convertDate(dateString);
         LocalDateTime expectedDate = LocalDateTime.now().plusMonths(addMonthExpected).withNano(0);
@@ -103,7 +106,7 @@ public class StringDateConverterTests {
     @Test
     public void shouldReturnDateTwentyMinutesFromNow() {
         String dateString = "20 minutes from now";
-        int addMonthExpected = 20;
+        int addMonthExpected = numTest20;
         StringDateConverter dateConverter = new StringDateConverter();
         LocalDateTime actualDate = dateConverter.convertDate(dateString);
         LocalDateTime expectedDate = LocalDateTime.now().plusMinutes(addMonthExpected).withNano(0);
@@ -113,7 +116,7 @@ public class StringDateConverterTests {
     @Test
     public void shouldReturnDateTenSecondsFromNow() {
         String dateString = "10 seconds from now";
-        int addMonthExpected = 10;
+        int addMonthExpected = numTest10;
         StringDateConverter dateConverter = new StringDateConverter();
         LocalDateTime actualDate = dateConverter.convertDate(dateString);
         LocalDateTime expectedDate = LocalDateTime.now().plusSeconds(addMonthExpected).withNano(0);

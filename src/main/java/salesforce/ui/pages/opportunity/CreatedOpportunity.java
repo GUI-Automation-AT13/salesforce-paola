@@ -1,12 +1,18 @@
 package salesforce.ui.pages.opportunity;
 
+import core.utils.Translate;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import salesforce.ui.pages.BasePage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreatedOpportunity extends BasePage {
+    private final int sleepTime = 2000;
+    private Map<String, String> headersFields;
+    private Map<String, String> detailFields;
 
     @FindBy(css = ".slds-theme--success span a div")
     private WebElement textCreatedSuccessfull;
@@ -20,20 +26,23 @@ public class CreatedOpportunity extends BasePage {
     @FindBy(xpath = "//a[@data-tab-value='detailTab']")
     private WebElement detailBtn;
 
-    @FindBy(xpath = "//li[contains(@class,'slds-dropdown-trigger_click')]")
-    private WebElement menuBtn;
+    private By menuBtn = By.xpath("//li[contains(@class,'slds-dropdown-trigger_click')]");
+    private By deleteOption = By.xpath("//div[@role='menu']//*[@title='" + Translate.translateField("delete")
+            + "']//a");
+    private By deleteBtnConfirm = By.xpath("//button[@title='" + Translate.translateField("delete") + "']");
+    private static final String CREATED_HEADER = "//div[./p[text()='%s']]//%s";
+    private static final String CREATED_DETAIL = "//div[./div[./span[contains(text(),'%s')]]]"
+            + "//lightning-formatted-text";
+    private static final String CREATED_SEARCH = "//div[./div[./span[contains(text(),'%s')]]]/"
+            + "div[@class='slds-form-element__control']";
+    private static final String CREATED_ACCOUNT_DETAIL = "//div[./div[./span[contains(text(),'%s')]]]//a/span";
 
-    @FindBy(xpath = "//div[@role='menu']//*[@title='Delete']//a")
-    private WebElement deleteOption;
-
-    @FindBy(xpath = "//button[@title='Delete']")
-    private WebElement deleteBtnConfirm;
-
-    private static final String CREATED_HEADER = "//div[./p[text()='%s']]//lightning-formatted-text";
-    private static final String CREATED_DETAIL = "//div[./div[./span[contains(text(),'%s')]]]//lightning-formatted-text";
+    public CreatedOpportunity() {
+        setHeadersFields();
+    }
 
     /**
-     * Waits for an specific element to load on the page.
+     * Waits for a specific element to load on the page.
      */
     @Override
     protected void waitForPageLoaded() {
@@ -57,12 +66,26 @@ public class CreatedOpportunity extends BasePage {
     }
 
     /**
-     * Gets the generic text from the header in a created opportunity page.
-     * @param field name of the field to get the String.
-     * @return the current text of the specific field.
+     * Gets a Map with all the headers fields of created opportunity page.
      */
-    public String getHeaderString(final String field) {
-        return driver.findElement(By.xpath(String.format(CREATED_HEADER, field))).getText();
+    public void setHeadersFields() {
+        headersFields = new HashMap<>();
+        headersFields.put("OpportunityName", getTitleHeader());
+        headersFields.put("Account", webElementAction.getHeaderString(CREATED_HEADER,
+                Translate.translateField("accountName"), "a/span"));
+        headersFields.put("CloseDate", webElementAction.getHeaderString(CREATED_HEADER,
+                Translate.translateField("closeDate"), "lightning-formatted-text"));
+        headersFields.put("Amount", webElementAction.getHeaderString(CREATED_HEADER,
+                Translate.translateField("amount"), "lightning-formatted-text"));
+        headersFields.put("Stage", getCurrentStage());
+    }
+
+    /**
+     * Gets all the headers fields.
+     * @return Map with all headers fields.
+     */
+    public Map<String, String> getHeadersFields() {
+        return headersFields;
     }
 
     /**
@@ -74,23 +97,51 @@ public class CreatedOpportunity extends BasePage {
     }
 
     /**
-     * Clicks the detail button for created Oppoprtunity.
+     * Clicks the detail button for created Opportunity.
      */
     public void clickDetails() {
         webElementAction.clickBtn(driver.findElement(By.xpath("//a[@data-tab-value='detailTab']")));
         //NEEDED TO WAIT FOR JAVASCRIPT TO LOAD
         try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ie) {}
+            Thread.sleep(sleepTime);
+            setDetailMap();
+        } catch (InterruptedException ie) {
+
+        }
     }
 
     /**
-     * Gets the text for a generic element.
-     * @param field the name of the web element.
-     * @return the text of the specific element.
+     * Gets Map with all the detail fields text.
+     * @return Map with detail field text.
      */
-    public String getDetailTextElement(final String field) {
-        return webElementAction.getElementText(driver.findElement(By.xpath(String.format(CREATED_DETAIL, field))));
+    public void setDetailMap() {
+        detailFields = new HashMap<>();
+        detailFields.put("OpportunityName", webElementAction.getDetailText(CREATED_DETAIL,
+                Translate.translateField("opportunityName")));
+        detailFields.put("Type", webElementAction.getDetailText(CREATED_DETAIL,
+                Translate.translateField("type")));
+        detailFields.put("LeadSource", webElementAction.getDetailText(CREATED_DETAIL,
+                Translate.translateField("leadSource")));
+        detailFields.put("Amount", webElementAction.getDetailText(CREATED_DETAIL,
+                Translate.translateField("amount")));
+        detailFields.put("CloseDate", webElementAction.getDetailText(CREATED_DETAIL,
+                Translate.translateField("closeDate")));
+        detailFields.put("NextStep", webElementAction.getDetailText(CREATED_DETAIL,
+                Translate.translateField("nextStep")));
+        detailFields.put("Stage", webElementAction.getDetailText(CREATED_DETAIL,
+                Translate.translateField("stage")));
+        detailFields.put("Probability", webElementAction.getDetailText(CREATED_SEARCH,
+                Translate.translateField("probability")));
+        detailFields.put("Account", webElementAction.getDetailText(CREATED_ACCOUNT_DETAIL,
+                Translate.translateField("account")));
+    }
+
+    /**
+     * Gets all the detail fields in Opportunity created.
+     * @return Map with all detail fields.
+     */
+    public Map<String, String> getDetailMap() {
+        return detailFields;
     }
 
     /**
@@ -98,9 +149,9 @@ public class CreatedOpportunity extends BasePage {
      * @return the opportunity page
      */
     public OpportunityPage deleteCreatedOpportunity() {
-        webElementAction.clickBtn(menuBtn);
-        webElementAction.clickBtn(deleteOption);
-        webElementAction.clickBtn(deleteBtnConfirm);
+        webElementAction.clickBtn(driver.findElement(menuBtn));
+        webElementAction.clickBtn(driver.findElement(deleteOption));
+        webElementAction.clickBtn(driver.findElement(deleteBtnConfirm));
         return new OpportunityPage();
     }
 }

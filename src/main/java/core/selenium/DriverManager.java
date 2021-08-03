@@ -10,10 +10,10 @@ import salesforce.config.ConfigEnvVar;
 
 public final class DriverManager {
 
-    static DriverManager driverManager;
-    protected WebDriver driver;
-    protected WebDriverWait wait;
-    protected DriverConfig driverConfig;
+    public static DriverManager driverManager;
+    private WebDriver driver;
+    private WebDriverWait wait;
+    private DriverConfig driverConfig;
 
     private DriverManager() {
         driverConfig = DriverConfig.getInstance();
@@ -55,7 +55,7 @@ public final class DriverManager {
         }
     }
 
-    private void quitDriver() {
+    public void quitDriver() {
         driver.quit();
         driverManager = null;
     }

@@ -1,28 +1,29 @@
 package salesforce.ui.pages.opportunity;
 
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import core.utils.Translate;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import salesforce.ui.pages.BasePage;
 
 public class OpportunityPage extends BasePage {
-
-    @FindBy(css = "a[title='New']")
-    private WebElement newBtn;
+    private String newXpath;
+    private By btnNew;
 
     /**
      * Override method for waiting an element.
      */
     @Override
     protected void waitForPageLoaded() {
-        wait.until(ExpectedConditions.visibilityOf(newBtn));
+        newXpath = String.format("//a[@title='%s']", Translate.translateField("new"));
+        btnNew = By.xpath(String.format(newXpath));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(btnNew));
     }
 
     /**
      * Clicks the new button for Opportunity form.
      */
     private void clickNewBtnOpportunity() {
-        webElementAction.clickBtn(newBtn);
+        driver.findElement(By.xpath(newXpath)).click();
     }
 
     /**
